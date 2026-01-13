@@ -1279,6 +1279,288 @@ const CoachDashboard = ({ t, lang, onBack, onLogout }) => {
             </div>
           </div>
         )}
+
+        {/* === CAMPAIGNS TAB === */}
+        {tab === "campaigns" && (
+          <div className="card-gradient rounded-xl p-6">
+            <h2 className="font-semibold text-white mb-6" style={{ fontSize: '20px' }}>📢 Gestionnaire de Campagnes</h2>
+            
+            {/* New Campaign Form */}
+            <form onSubmit={createCampaign} className="mb-8 p-5 rounded-xl glass">
+              <h3 className="text-white font-semibold mb-4">Nouvelle Campagne</h3>
+              
+              {/* Campaign Name */}
+              <div className="mb-4">
+                <label className="block mb-2 text-white text-sm">Nom de la campagne</label>
+                <input type="text" required value={newCampaign.name} onChange={e => setNewCampaign({...newCampaign, name: e.target.value})}
+                  className="w-full px-4 py-3 rounded-lg neon-input" placeholder="Ex: Promo Noël 2024" />
+              </div>
+              
+              {/* Target Selection */}
+              <div className="mb-4">
+                <label className="block mb-2 text-white text-sm">Contacts ciblés</label>
+                <div className="flex gap-4 mb-3">
+                  <label className="flex items-center gap-2 text-white text-sm cursor-pointer">
+                    <input type="radio" name="targetType" checked={newCampaign.targetType === "all"} 
+                      onChange={() => setNewCampaign({...newCampaign, targetType: "all"})} />
+                    Tous les contacts ({allContacts.length})
+                  </label>
+                  <label className="flex items-center gap-2 text-white text-sm cursor-pointer">
+                    <input type="radio" name="targetType" checked={newCampaign.targetType === "selected"} 
+                      onChange={() => setNewCampaign({...newCampaign, targetType: "selected"})} />
+                    Sélection individuelle
+                  </label>
+                </div>
+                
+                {/* Contact Selection List */}
+                {newCampaign.targetType === "selected" && (
+                  <div className="border border-purple-500/30 rounded-lg p-3" style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                    <div className="flex items-center gap-2 mb-2">
+                      <input type="text" placeholder="🔍 Rechercher..." value={contactSearchQuery}
+                        onChange={e => setContactSearchQuery(e.target.value)}
+                        className="flex-1 px-3 py-2 rounded-lg neon-input text-sm" />
+                      <button type="button" onClick={toggleAllContacts} className="px-3 py-2 rounded-lg glass text-white text-xs">
+                        {selectedContactsForCampaign.length === allContacts.length ? 'Désélectionner tout' : 'Tout sélectionner'}
+                      </button>
+                    </div>
+                    <div className="space-y-1">
+                      {filteredContacts.map(contact => (
+                        <label key={contact.id} className="flex items-center gap-2 text-white text-sm cursor-pointer hover:bg-purple-500/10 p-1 rounded">
+                          <input type="checkbox" checked={selectedContactsForCampaign.includes(contact.id)}
+                            onChange={() => toggleContactForCampaign(contact.id)} />
+                          <span className="truncate">{contact.name}</span>
+                          <span className="text-xs opacity-50 truncate">({contact.email})</span>
+                        </label>
+                      ))}
+                    </div>
+                    <p className="text-xs text-purple-400 mt-2">{selectedContactsForCampaign.length} contact(s) sélectionné(s)</p>
+                  </div>
+                )}
+              </div>
+              
+              {/* Message */}
+              <div className="mb-4">
+                <label className="block mb-2 text-white text-sm">Message</label>
+                <textarea required value={newCampaign.message} onChange={e => setNewCampaign({...newCampaign, message: e.target.value})}
+                  className="w-full px-4 py-3 rounded-lg neon-input" rows={4}
+                  placeholder="Salut {prénom} ! 🎉&#10;&#10;Profite de notre offre spéciale..." />
+                <p className="text-xs text-purple-400 mt-1">Variables disponibles: {'{prénom}'} - sera remplacé par le nom du contact</p>
+              </div>
+              
+              {/* Media */}
+              <div className="mb-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block mb-2 text-white text-sm">URL du visuel (image/vidéo)</label>
+                  <input type="url" value={newCampaign.mediaUrl} onChange={e => setNewCampaign({...newCampaign, mediaUrl: e.target.value})}
+                    className="w-full px-4 py-3 rounded-lg neon-input" placeholder="https://..." />
+                </div>
+                <div>
+                  <label className="block mb-2 text-white text-sm">Format</label>
+                  <div className="flex gap-4">
+                    <label className="flex items-center gap-2 text-white text-sm cursor-pointer">
+                      <input type="radio" name="mediaFormat" checked={newCampaign.mediaFormat === "9:16"}
+                        onChange={() => setNewCampaign({...newCampaign, mediaFormat: "9:16"})} />
+                      9:16 (Stories)
+                    </label>
+                    <label className="flex items-center gap-2 text-white text-sm cursor-pointer">
+                      <input type="radio" name="mediaFormat" checked={newCampaign.mediaFormat === "16:9"}
+                        onChange={() => setNewCampaign({...newCampaign, mediaFormat: "16:9"})} />
+                      16:9 (Post)
+                    </label>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Media Preview */}
+              {newCampaign.mediaUrl && (
+                <div className="mb-4">
+                  <p className="text-white text-sm mb-2">Aperçu ({newCampaign.mediaFormat}):</p>
+                  <div className="flex justify-center">
+                    <div style={{ 
+                      width: newCampaign.mediaFormat === "9:16" ? '150px' : '280px',
+                      height: newCampaign.mediaFormat === "9:16" ? '267px' : '158px',
+                      background: '#000', borderRadius: '8px', overflow: 'hidden',
+                      border: '1px solid rgba(139, 92, 246, 0.3)'
+                    }}>
+                      <img src={newCampaign.mediaUrl} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                        onError={(e) => { e.target.style.display = 'none'; }} />
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              {/* Channels */}
+              <div className="mb-4">
+                <label className="block mb-2 text-white text-sm">Canaux d'envoi</label>
+                <div className="flex flex-wrap gap-4">
+                  <label className="flex items-center gap-2 text-white text-sm cursor-pointer">
+                    <input type="checkbox" checked={newCampaign.channels.whatsapp}
+                      onChange={e => setNewCampaign({...newCampaign, channels: {...newCampaign.channels, whatsapp: e.target.checked}})} />
+                    📱 WhatsApp
+                  </label>
+                  <label className="flex items-center gap-2 text-white text-sm cursor-pointer">
+                    <input type="checkbox" checked={newCampaign.channels.email}
+                      onChange={e => setNewCampaign({...newCampaign, channels: {...newCampaign.channels, email: e.target.checked}})} />
+                    📧 Email
+                  </label>
+                  <label className="flex items-center gap-2 text-white text-sm cursor-pointer">
+                    <input type="checkbox" checked={newCampaign.channels.instagram}
+                      onChange={e => setNewCampaign({...newCampaign, channels: {...newCampaign.channels, instagram: e.target.checked}})} />
+                    📸 Instagram
+                  </label>
+                </div>
+              </div>
+              
+              {/* Scheduling */}
+              <div className="mb-4">
+                <label className="block mb-2 text-white text-sm">Programmation</label>
+                <div className="flex flex-wrap gap-4 items-center">
+                  <label className="flex items-center gap-2 text-white text-sm cursor-pointer">
+                    <input type="radio" name="schedule" checked={!newCampaign.scheduledDate}
+                      onChange={() => setNewCampaign({...newCampaign, scheduledDate: "", scheduledTime: ""})} />
+                    Envoyer maintenant
+                  </label>
+                  <label className="flex items-center gap-2 text-white text-sm cursor-pointer">
+                    <input type="radio" name="schedule" checked={!!newCampaign.scheduledDate}
+                      onChange={() => setNewCampaign({...newCampaign, scheduledDate: new Date().toISOString().split('T')[0], scheduledTime: "18:00"})} />
+                    Programmer
+                  </label>
+                  {newCampaign.scheduledDate && (
+                    <div className="flex gap-2">
+                      <input type="date" value={newCampaign.scheduledDate} 
+                        onChange={e => setNewCampaign({...newCampaign, scheduledDate: e.target.value})}
+                        className="px-3 py-2 rounded-lg neon-input text-sm" />
+                      <input type="time" value={newCampaign.scheduledTime}
+                        onChange={e => setNewCampaign({...newCampaign, scheduledTime: e.target.value})}
+                        className="px-3 py-2 rounded-lg neon-input text-sm" />
+                    </div>
+                  )}
+                </div>
+              </div>
+              
+              <button type="submit" className="btn-primary px-6 py-3 rounded-lg w-full md:w-auto">
+                🚀 Créer la campagne
+              </button>
+            </form>
+            
+            {/* Campaign History */}
+            <div>
+              <h3 className="text-white font-semibold mb-4">Historique des campagnes</h3>
+              
+              {/* Mobile-friendly scrollable table */}
+              <div className="overflow-x-auto" style={{ WebkitOverflowScrolling: 'touch' }}>
+                <table className="w-full min-w-[600px]">
+                  <thead>
+                    <tr className="text-left text-white text-sm opacity-70 border-b border-purple-500/30">
+                      <th className="pb-3 pr-4">Campagne</th>
+                      <th className="pb-3 pr-4">Contacts</th>
+                      <th className="pb-3 pr-4">Canaux</th>
+                      <th className="pb-3 pr-4">Statut</th>
+                      <th className="pb-3 pr-4">Date</th>
+                      <th className="pb-3">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {campaigns.map(campaign => (
+                      <tr key={campaign.id} className="border-b border-purple-500/20 text-white text-sm">
+                        <td className="py-3 pr-4">
+                          <span className="font-medium">{campaign.name}</span>
+                        </td>
+                        <td className="py-3 pr-4">
+                          {campaign.targetType === "all" ? `Tous (${campaign.results?.length || 0})` : campaign.selectedContacts?.length || 0}
+                        </td>
+                        <td className="py-3 pr-4">
+                          {campaign.channels?.whatsapp && <span className="mr-1">📱</span>}
+                          {campaign.channels?.email && <span className="mr-1">📧</span>}
+                          {campaign.channels?.instagram && <span>📸</span>}
+                        </td>
+                        <td className="py-3 pr-4">
+                          {campaign.status === 'draft' && <span className="px-2 py-1 rounded text-xs bg-gray-600">📝 Brouillon</span>}
+                          {campaign.status === 'scheduled' && <span className="px-2 py-1 rounded text-xs bg-yellow-600">📅 Programmé</span>}
+                          {campaign.status === 'sending' && <span className="px-2 py-1 rounded text-xs bg-blue-600">🔄 En cours</span>}
+                          {campaign.status === 'completed' && <span className="px-2 py-1 rounded text-xs bg-green-600">✅ Envoyé</span>}
+                        </td>
+                        <td className="py-3 pr-4 text-xs opacity-70">
+                          {campaign.scheduledAt ? new Date(campaign.scheduledAt).toLocaleString('fr-FR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) : 'Immédiat'}
+                        </td>
+                        <td className="py-3">
+                          <div className="flex gap-2">
+                            {(campaign.status === 'draft' || campaign.status === 'scheduled') && (
+                              <button onClick={() => launchCampaign(campaign.id)} className="px-3 py-1 rounded text-xs bg-purple-600 hover:bg-purple-700">
+                                🚀 Lancer
+                              </button>
+                            )}
+                            {campaign.status === 'sending' && (
+                              <button onClick={() => setTab(`campaign-${campaign.id}`)} className="px-3 py-1 rounded text-xs bg-blue-600 hover:bg-blue-700">
+                                👁️ Voir
+                              </button>
+                            )}
+                            <button onClick={() => deleteCampaign(campaign.id)} className="px-3 py-1 rounded text-xs bg-red-600/30 hover:bg-red-600/50 text-red-400">
+                              🗑️
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                    {campaigns.length === 0 && (
+                      <tr>
+                        <td colSpan={6} className="py-8 text-center text-white opacity-50">
+                          Aucune campagne créée pour le moment
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+              
+              {/* Expanded Campaign Details (when sending) */}
+              {campaigns.filter(c => c.status === 'sending').map(campaign => (
+                <div key={`detail-${campaign.id}`} className="mt-6 p-4 rounded-xl glass">
+                  <h4 className="text-white font-semibold mb-3">🔄 {campaign.name} - En cours d'envoi</h4>
+                  <p className="text-white text-sm mb-3 opacity-70">Cliquez sur un contact pour ouvrir le lien et marquer comme envoyé</p>
+                  
+                  <div className="space-y-2" style={{ maxHeight: '300px', overflowY: 'auto' }}>
+                    {campaign.results?.map((result, idx) => (
+                      <div key={idx} className="flex items-center justify-between gap-2 p-2 rounded-lg bg-black/30">
+                        <div className="flex items-center gap-2 flex-1 min-w-0">
+                          <span className="text-white text-sm truncate">{result.contactName}</span>
+                          <span className="text-xs opacity-50">
+                            {result.channel === 'whatsapp' && '📱'}
+                            {result.channel === 'email' && '📧'}
+                            {result.channel === 'instagram' && '📸'}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          {result.status === 'pending' && (
+                            <a 
+                              href={result.channel === 'whatsapp' 
+                                ? generateWhatsAppLink(result.contactPhone, campaign.message, campaign.mediaUrl, result.contactName)
+                                : result.channel === 'email'
+                                ? generateEmailLink(result.contactEmail, campaign.name, campaign.message, campaign.mediaUrl, result.contactName)
+                                : `https://instagram.com`}
+                              target="_blank" rel="noopener noreferrer"
+                              onClick={() => markResultSent(campaign.id, result.contactId, result.channel)}
+                              className="px-3 py-1 rounded text-xs bg-purple-600 hover:bg-purple-700 text-white"
+                            >
+                              Envoyer
+                            </a>
+                          )}
+                          {result.status === 'sent' && (
+                            <span className="px-2 py-1 rounded text-xs bg-green-600/30 text-green-400">✅ Envoyé</span>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  <div className="mt-3 text-xs text-purple-400">
+                    Progression: {campaign.results?.filter(r => r.status === 'sent').length || 0} / {campaign.results?.length || 0} envoyé(s)
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
