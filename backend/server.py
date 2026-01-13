@@ -159,12 +159,14 @@ class Concept(BaseModel):
     heroImageUrl: str = ""
     heroVideoUrl: str = ""
     logoUrl: str = ""
+    faviconUrl: str = ""
 
 class ConceptUpdate(BaseModel):
     description: Optional[str] = None
     heroImageUrl: Optional[str] = None
     heroVideoUrl: Optional[str] = None
     logoUrl: Optional[str] = None
+    faviconUrl: Optional[str] = None
 
 class AppConfig(BaseModel):
     model_config = ConfigDict(extra="ignore")
