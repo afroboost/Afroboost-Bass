@@ -2230,18 +2230,9 @@ const CoachDashboard = ({ t, lang, onBack, onLogout }) => {
                 </div>
               )}
               
-              {/* Description */}
-              <div className="mt-3">
-                <textarea 
-                  placeholder="Description (max 150 car.)" 
-                  value={newOffer.description || ''} 
-                  onChange={e => setNewOffer({ ...newOffer, description: e.target.value })} 
-                  className="w-full px-3 py-2 rounded-lg neon-input text-sm" 
-                  rows={2}
-                  maxLength={150}
-                />
-              </div>
-              <button type="submit" className="btn-primary px-4 py-2 rounded-lg mt-4 text-sm">{t('add')}</button>
+              <button type="submit" className="btn-primary px-6 py-3 rounded-lg mt-4 text-sm w-full">
+                {editingOfferId ? '💾 Enregistrer les modifications' : '➕ Ajouter l\'offre'}
+              </button>
             </form>
           </div>
         )}
