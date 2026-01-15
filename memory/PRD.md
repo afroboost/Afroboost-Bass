@@ -156,17 +156,28 @@ Application de réservation de casques audio pour des cours de fitness Afroboost
 ```
 /app/
 ├── backend/
-│   ├── server.py       # FastAPI avec MongoDB
+│   ├── server.py       # FastAPI avec données en mémoire
 │   ├── requirements.txt
 │   └── tests/
 │       ├── test_afroboost_api.py
 │       └── test_campaigns_api.py
 └── frontend/
     ├── src/
-    │   ├── App.js      # Composant React principal (monolithique)
-    │   └── App.css     # Styles néon
+    │   ├── App.js      # Composant React principal (monolithique - à refactoriser)
+    │   ├── App.css     # Styles néon avec corrections swipe
+    │   ├── config/
+    │   │   ├── index.js      # Configuration groupée
+    │   │   └── constants.js  # Constantes exportées (NOUVEAU)
+    │   ├── components/
+    │   │   └── ui/           # Shadcn components
+    │   ├── hooks/
+    │   │   └── index.js      # Hooks personnalisés (préparé)
+    │   └── utils/
+    │       └── i18n.js       # Internationalisation (préparé)
+    ├── vercel.json           # Configuration déploiement Vercel
+    ├── ARCHITECTURE.md       # Documentation structure
     └── public/
-        ├── index.html  # PWA meta tags
+        ├── index.html  # PWA meta tags + Open Graph
         └── manifest.json
 ```
 
