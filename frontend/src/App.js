@@ -2068,6 +2068,7 @@ function App() {
   const [showSplash, setShowSplash] = useState(true);
   const [showCoachLogin, setShowCoachLogin] = useState(false);
   const [coachMode, setCoachMode] = useState(false);
+  const [validationCode, setValidationCode] = useState(null); // For /validate/:code URL
 
   const [courses, setCourses] = useState([]);
   const [offers, setOffers] = useState([]);
@@ -2097,6 +2098,18 @@ function App() {
   const [lastReservation, setLastReservation] = useState(null);
   const [loading, setLoading] = useState(false);
   const [appliedDiscount, setAppliedDiscount] = useState(null);
+
+  // Check for /validate/:code URL on mount
+  useEffect(() => {
+    const path = window.location.pathname;
+    if (path.startsWith('/validate/')) {
+      const code = path.replace('/validate/', '').toUpperCase();
+      if (code) {
+        setValidationCode(code);
+        setShowCoachLogin(true);
+      }
+    }
+  }, []);
 
   const [clickCount, setClickCount] = useState(0);
   const [lastClickTime, setLastClickTime] = useState(0);
