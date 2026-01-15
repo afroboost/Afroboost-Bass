@@ -543,6 +543,10 @@ select option {
   background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(10, 10, 15, 0.95) 100%) !important;
 }
 
+/* =================================================================
+   COACH MODE ADMIN STYLES
+   ================================================================= */
+
 /* Coach Mode Tabs */
 .coach-tab {
   transition: all 0.3s ease;
@@ -559,6 +563,44 @@ select option {
   border: 1px solid rgba(139, 92, 246, 0.6);
   box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
 }
+
+/* =================================================================
+   CAMPAIGNS STYLES - Gestionnaire de campagnes marketing
+   ================================================================= */
+
+/* Compteur de contacts ciblés */
+.campaign-counter {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(217, 28, 210, 0.05) 100%);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+}
+
+/* Panneau envoi direct */
+.direct-send-panel {
+  border: 2px solid rgba(217, 28, 210, 0.5);
+  background: rgba(139, 92, 246, 0.05);
+}
+
+/* Canal Email */
+.channel-email {
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+/* Canal WhatsApp */
+.channel-whatsapp {
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+/* Canal Instagram */
+.channel-instagram {
+  background: rgba(168, 85, 247, 0.1);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+}
+
+/* =================================================================
+   HERO & MEDIA STYLES
+   ================================================================= */
 
 /* Hero Media Container */
 .hero-media-container {
