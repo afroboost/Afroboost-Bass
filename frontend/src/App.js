@@ -3049,11 +3049,107 @@ const CoachDashboard = ({ t, lang, onBack, onLogout }) => {
                     onChange={e => setNewCampaign({...newCampaign, message: e.target.value})}
                     className="w-full px-4 py-3 rounded-lg neon-input" 
                     rows={3}
-                    placeholder="Votre message..."
+                    placeholder="Votre message... (utilisez {prénom} pour personnaliser)"
+                  />
+                </div>
+
+                {/* Champ URL média/miniature */}
+                <div className="mb-4">
+                  <label className="block mb-2 text-white text-sm">📎 URL du média (image/vidéo)</label>
+                  <input 
+                    type="url"
+                    value={newCampaign.mediaUrl} 
+                    onChange={e => setNewCampaign({...newCampaign, mediaUrl: e.target.value})}
+                    className="w-full px-4 py-3 rounded-lg neon-input" 
+                    placeholder="https://example.com/image.jpg (optionnel)"
                   />
                   {newCampaign.mediaUrl && (
-                    <p className="text-xs text-green-400 mt-1">✓ Média attaché: {newCampaign.mediaUrl.substring(0, 50)}...</p>
+                    <div className="mt-2 flex items-center gap-3">
+                      <span className="text-xs text-green-400">✓ Média attaché</span>
+                      <img 
+                        src={newCampaign.mediaUrl} 
+                        alt="Aperçu" 
+                        className="w-12 h-12 rounded object-cover border border-purple-500/30"
+                        onError={(e) => { e.target.style.display = 'none'; }}
+                      />
+                    </div>
                   )}
+                </div>
+
+                {/* === BARRE DE PROGRESSION GROUPÉE === */}
+                {bulkSendingProgress && (
+                  <div className="mb-4 p-4 rounded-xl bg-gradient-to-r from-blue-900/30 to-green-900/30 border border-purple-500/30">
+                    <div className="flex justify-between text-sm text-white mb-2">
+                      <span className="font-semibold">
+                        {bulkSendingProgress.channel === 'email' ? '📧 Envoi Emails...' : '📱 Envoi WhatsApp...'}
+                      </span>
+                      <span>{bulkSendingProgress.current}/{bulkSendingProgress.total}</span>
+                    </div>
+                    <div className="w-full bg-gray-700 rounded-full h-3">
+                      <div 
+                        className={`h-3 rounded-full transition-all duration-300 ${
+                          bulkSendingProgress.channel === 'email' ? 'bg-blue-500' : 'bg-green-500'
+                        }`}
+                        style={{ width: `${(bulkSendingProgress.current / bulkSendingProgress.total) * 100}%` }}
+                      />
+                    </div>
+                    {bulkSendingProgress.name && (
+                      <p className="text-xs text-white/70 mt-1 truncate">→ {bulkSendingProgress.name}</p>
+                    )}
+                  </div>
+                )}
+
+                {/* === RÉSULTATS ENVOI GROUPÉ === */}
+                {bulkSendingResults && !bulkSendingProgress && (
+                  <div className="mb-4 p-4 rounded-xl bg-black/30 border border-green-500/30">
+                    <div className="flex justify-between items-center mb-2">
+                      <h4 className="text-white font-semibold">📊 Récapitulatif d'envoi</h4>
+                      <button 
+                        type="button"
+                        onClick={() => setBulkSendingResults(null)}
+                        className="text-white/60 hover:text-white"
+                      >×</button>
+                    </div>
+                    <div className="grid grid-cols-2 gap-3 text-sm">
+                      {bulkSendingResults.email && (
+                        <div className="p-2 rounded bg-blue-900/30">
+                          <span className="text-blue-400">📧 Emails:</span>
+                          <span className="text-white ml-2">{bulkSendingResults.email.sent} ✅</span>
+                          {bulkSendingResults.email.failed > 0 && (
+                            <span className="text-red-400 ml-1">{bulkSendingResults.email.failed} ❌</span>
+                          )}
+                        </div>
+                      )}
+                      {bulkSendingResults.whatsapp && (
+                        <div className="p-2 rounded bg-green-900/30">
+                          <span className="text-green-400">📱 WhatsApp:</span>
+                          <span className="text-white ml-2">{bulkSendingResults.whatsapp.sent} ✅</span>
+                          {bulkSendingResults.whatsapp.failed > 0 && (
+                            <span className="text-red-400 ml-1">{bulkSendingResults.whatsapp.failed} ❌</span>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* === BOUTON ENVOI GROUPÉ === */}
+                <div className="mb-4">
+                  <button 
+                    type="button"
+                    onClick={handleBulkSendCampaign}
+                    disabled={bulkSendingInProgress || (!isEmailJSConfigured() && !isWhatsAppConfigured())}
+                    className="w-full py-4 rounded-xl font-bold text-white text-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    style={{
+                      background: 'linear-gradient(135deg, #3b82f6 0%, #22c55e 50%, #d91cd2 100%)',
+                      boxShadow: bulkSendingInProgress ? 'none' : '0 0 20px rgba(217, 28, 210, 0.4)'
+                    }}
+                  >
+                    {bulkSendingInProgress ? '⏳ Envoi en cours...' : '🚀 Envoyer Email + WhatsApp'}
+                  </button>
+                  <p className="text-xs text-white/50 text-center mt-2">
+                    Envoie automatiquement sur tous les canaux configurés
+                  </p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -3061,7 +3157,7 @@ const CoachDashboard = ({ t, lang, onBack, onLogout }) => {
                   {/* === EMAIL AUTOMATIQUE (EmailJS) === */}
                   <div className="p-4 rounded-xl bg-blue-900/20 border border-blue-500/30">
                     <h4 className="text-white font-semibold mb-3 flex items-center gap-2">
-                      📧 Email Automatique
+                      📧 Email
                       <button 
                         type="button"
                         onClick={() => setShowEmailJSConfig(!showEmailJSConfig)}
