@@ -209,6 +209,30 @@ Application de réservation de casques audio pour des cours de fitness Afroboost
    - Récapitulatif final avec stats par canal
    - Mode manuel WhatsApp conservé (←/Ouvrir/→)
 
+### Agent IA WhatsApp (15 Jan 2026)
+1. ✅ **Backend IA avec OpenAI via Emergent LLM Key**:
+   - `/backend/server.py` - Endpoints `/api/ai-config`, `/api/ai-logs`, `/api/ai-test`, `/api/webhook/whatsapp`
+   - Service `aiResponseService.js` côté frontend pour configuration
+   - Utilise `emergentintegrations` pour l'intégration OpenAI
+   - Session par numéro de téléphone pour contexte multi-tour
+
+2. ✅ **Mémorisation du contexte**:
+   - Recherche automatique du client par numéro dans les réservations
+   - Personnalisation avec le prénom du client dans les réponses
+   - Référence au dernier média envoyé (`lastMediaUrl`)
+
+3. ✅ **Interface Admin IA**:
+   - Panneau "🤖 Agent IA WhatsApp" avec toggle activation
+   - Prompt système personnalisable (personnalité de l'IA)
+   - Sélecteurs Provider (OpenAI, Anthropic, Google) et Modèle
+   - URL Webhook Twilio affichée pour configuration
+   - Zone de test IA avec réponse en temps réel
+
+4. ✅ **Logs de l'IA**:
+   - Affichage des dernières réponses (heure + prénom + extrait)
+   - Bouton "🗑️ Effacer" pour nettoyer les logs
+   - Stockage dans MongoDB (50 derniers logs)
+
 ---
 
 ## Technical Architecture
