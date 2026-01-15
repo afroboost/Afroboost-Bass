@@ -2021,7 +2021,7 @@ const CoachDashboard = ({ t, lang, onBack, onLogout }) => {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <input type="text" placeholder={t('offerName')} value={newOffer.name} onChange={e => setNewOffer({ ...newOffer, name: e.target.value })} className="px-3 py-2 rounded-lg neon-input text-sm" required />
                 <input type="number" placeholder={t('price')} value={newOffer.price} onChange={e => setNewOffer({ ...newOffer, price: parseFloat(e.target.value) })} className="px-3 py-2 rounded-lg neon-input text-sm" />
-                <input type="url" placeholder={t('thumbnail')} value={newOffer.thumbnail || ''} onChange={e => setNewOffer({ ...newOffer, thumbnail: e.target.value })} className="px-3 py-2 rounded-lg neon-input text-sm" />
+                <input type="text" placeholder="URLs images (max 5, séparées par virgule)" value={newOffer.thumbnail || ''} onChange={e => setNewOffer({ ...newOffer, thumbnail: e.target.value })} className="px-3 py-2 rounded-lg neon-input text-sm" />
               </div>
               
               {/* Category & Type */}
