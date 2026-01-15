@@ -700,12 +700,19 @@ const CoachDashboard = ({ t, lang, onBack, onLogout }) => {
   const [offers, setOffers] = useState([]);
   const [users, setUsers] = useState([]);
   const [paymentLinks, setPaymentLinks] = useState({ stripe: "", paypal: "", twint: "", coachWhatsapp: "" });
-  const [concept, setConcept] = useState({ description: "", heroImageUrl: "", logoUrl: "", faviconUrl: "" });
+  const [concept, setConcept] = useState({ description: "", heroImageUrl: "", logoUrl: "", faviconUrl: "", termsText: "" });
   const [discountCodes, setDiscountCodes] = useState([]);
   const [newCode, setNewCode] = useState({ code: "", type: "", value: "", assignedEmail: "", courses: [], maxUses: "", expiresAt: "" });
   const [newCourse, setNewCourse] = useState({ name: "", weekday: 0, time: "18:30", locationName: "", mapsUrl: "" });
   const [newOffer, setNewOffer] = useState({ name: "", price: 0, visible: true, thumbnail: "", description: "" });
   const fileInputRef = useRef(null);
+  
+  // Scanner state
+  const [showScanner, setShowScanner] = useState(false);
+  const [scanResult, setScanResult] = useState(null);
+  const [scanError, setScanError] = useState(null);
+  const videoRef = useRef(null);
+  const canvasRef = useRef(null);
 
   useEffect(() => {
     const loadData = async () => {
