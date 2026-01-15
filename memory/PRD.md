@@ -200,12 +200,18 @@ Application de réservation de casques audio pour des cours de fitness Afroboost
 - [x] Envoi WhatsApp avec aperçu média
 - [x] Programmation multi-dates
 - [x] Indicateurs d'erreur visuels
+- [x] Swipe fluide des offres (mobile)
+- [x] Affichage correct des images d'offres
+- [x] Cartes non tronquées
+- [x] Architecture config Vercel initiée
 
-### P1 - En attente
-- [ ] Migration vers vraie persistance MongoDB (actuellement données en mémoire perdues au redémarrage)
-- [ ] Refactoring App.js en composants modulaires (fichier > 2000 lignes)
+### P1 - À faire
+- [ ] Refactoring App.js en composants modulaires (fichier > 3000 lignes)
+- [ ] Migration vers vraie persistance MongoDB (actuellement données en mémoire)
+- [ ] Amélioration Scanner QR (tests sur vrais appareils)
 
 ### P2 - Backlog
+- [ ] Créer pages dédiées: /boutique, /profil (routing Vercel)
 - [ ] Envoi Email via mailto: avec sujet personnalisé
 - [ ] Envoi Instagram via ig.me
 - [ ] Notifications email après réservation
