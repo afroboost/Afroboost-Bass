@@ -222,6 +222,7 @@ class Concept(BaseModel):
     faviconUrl: str = ""
     termsText: str = ""  # CGV - Conditions Générales de Vente
     googleReviewsUrl: str = ""  # Lien avis Google
+    defaultLandingSection: str = "sessions"  # Section d'atterrissage par défaut: "sessions", "offers", "shop"
 
 class ConceptUpdate(BaseModel):
     description: Optional[str] = None
@@ -231,6 +232,7 @@ class ConceptUpdate(BaseModel):
     faviconUrl: Optional[str] = None
     termsText: Optional[str] = None  # CGV - Conditions Générales de Vente
     googleReviewsUrl: Optional[str] = None  # Lien avis Google
+    defaultLandingSection: Optional[str] = None  # Section d'atterrissage par défaut
 
 class AppConfig(BaseModel):
     model_config = ConfigDict(extra="ignore")
