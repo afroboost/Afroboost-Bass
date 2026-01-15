@@ -203,13 +203,19 @@ Application de réservation de casques audio pour des cours de fitness Afroboost
 │       └── test_campaigns_api.py
 └── frontend/
     ├── src/
-    │   ├── App.js      # Composant React principal (monolithique - à refactoriser)
-    │   ├── App.css     # Styles néon avec corrections swipe
+    │   ├── App.js      # Composant React principal (~3500 lignes, en cours de découpage)
+    │   ├── App.css     # Styles néon organisés par sections
     │   ├── config/
     │   │   ├── index.js      # Configuration groupée
-    │   │   └── constants.js  # Constantes exportées (NOUVEAU)
+    │   │   └── constants.js  # Constantes exportées
     │   ├── components/
-    │   │   └── ui/           # Shadcn components
+    │   │   ├── index.js          # Export centralisé (NOUVEAU)
+    │   │   ├── OfferCard.js      # Composants offres + multi-images (NOUVEAU)
+    │   │   ├── QRScanner.js      # Scanner QR avec gestion caméra (NOUVEAU)
+    │   │   ├── AdminCampaigns.js # Hooks + composants campagnes (NOUVEAU)
+    │   │   ├── LanguageSelector.jsx
+    │   │   └── ui/
+    │   │       └── index.jsx     # Composants UI de base
     │   ├── hooks/
     │   │   └── index.js      # Hooks personnalisés (préparé)
     │   └── utils/
