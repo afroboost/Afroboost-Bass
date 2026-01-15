@@ -5506,6 +5506,9 @@ function App() {
         
         {/* Indicateur de scroll pour les nouveaux utilisateurs */}
         <ScrollIndicator show={showScrollIndicator && !coachMode && !showSplash} />
+        
+        {/* Widget Chat IA flottant */}
+        <ChatWidget />
       </div>
     </div>
   );
