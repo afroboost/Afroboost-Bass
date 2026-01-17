@@ -78,6 +78,7 @@ class Offer(BaseModel):
     thumbnail: Optional[str] = ""
     videoUrl: Optional[str] = ""
     description: Optional[str] = ""
+    keywords: Optional[str] = ""  # Mots-clés pour la recherche (invisible)
     visible: bool = True
     images: List[str] = []  # Support multi-images (max 5)
     # E-commerce fields
@@ -94,6 +95,7 @@ class OfferCreate(BaseModel):
     thumbnail: Optional[str] = ""
     videoUrl: Optional[str] = ""
     description: Optional[str] = ""
+    keywords: Optional[str] = ""  # Mots-clés pour la recherche
     visible: bool = True
     images: List[str] = []  # Support multi-images (max 5)
     # E-commerce fields
