@@ -181,7 +181,7 @@ export const NavigationBar = ({
         </div>
       )}
 
-      {/* Icônes de filtres - Ultra minimalistes, petites, style globe */}
+      {/* Icônes de filtres - Ultra minimalistes, petites, style globe (26px) */}
       {showFilters && (
         <div 
           className="filter-icons-container"
@@ -189,7 +189,7 @@ export const NavigationBar = ({
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            gap: '12px'
+            gap: '10px'
           }}
         >
           {FILTER_OPTIONS.map((filter) => {
@@ -206,12 +206,12 @@ export const NavigationBar = ({
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  width: '32px',
-                  height: '32px',
+                  width: '26px',
+                  height: '26px',
                   borderRadius: '50%',
-                  border: `1px solid ${isActive ? '#D91CD2' : 'rgba(255, 255, 255, 0.25)'}`,
+                  border: `1px solid ${isActive ? '#D91CD2' : 'rgba(255, 255, 255, 0.2)'}`,
                   background: isActive ? 'rgba(217, 28, 210, 0.15)' : 'transparent',
-                  color: isActive ? '#D91CD2' : 'rgba(255, 255, 255, 0.6)',
+                  color: isActive ? '#D91CD2' : 'rgba(255, 255, 255, 0.5)',
                   cursor: 'pointer',
                   transition: 'all 0.25s ease',
                   outline: 'none',
