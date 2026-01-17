@@ -2069,6 +2069,20 @@ const CoachDashboard = ({ t, lang, onBack, onLogout }) => {
                 <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.4)' }}>{(newOffer.description || '').length}/150</p>
               </div>
               
+              {/* Mots-clés pour la recherche */}
+              <div className="mt-3">
+                <label className="text-xs text-white opacity-60 mb-1 block">🔍 Mots-clés (pour la recherche)</label>
+                <input 
+                  type="text"
+                  value={newOffer.keywords || ''} 
+                  onChange={e => setNewOffer({ ...newOffer, keywords: e.target.value })}
+                  className="w-full px-3 py-2 rounded-lg neon-input text-sm" 
+                  placeholder="session, séance, cardio, danse, afro... (séparés par virgules)"
+                  data-testid="offer-keywords"
+                />
+                <p className="text-xs mt-1" style={{ color: 'rgba(139, 92, 246, 0.6)' }}>💡 Aide les clients à trouver cette offre avec des termes alternatifs</p>
+              </div>
+              
               {/* Category & Type - Stack on mobile */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-3">
                 <select 
