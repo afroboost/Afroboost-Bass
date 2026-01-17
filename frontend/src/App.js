@@ -616,7 +616,8 @@ const MediaDisplay = ({ url, className }) => {
   if (media.type === 'youtube') {
     const muteParam = isMuted ? '1' : '0';
     // URL YouTube avec TOUS les paramètres pour masquer les contrôles et empêcher la sortie
-    const youtubeUrl = `https://www.youtube.com/embed/${media.id}?autoplay=1&mute=${muteParam}&loop=1&playlist=${media.id}&playsinline=1&modestbranding=1&rel=0&showinfo=0&controls=0&disablekb=1&fs=0&iv_load_policy=3&cc_load_policy=0&origin=${window.location.origin}`;
+    // Note: Les navigateurs bloquent autoplay+son, YouTube affiche son bouton Play
+    const youtubeUrl = `https://www.youtube.com/embed/${media.id}?autoplay=1&mute=${muteParam}&loop=1&playlist=${media.id}&playsinline=1&modestbranding=1&rel=0&showinfo=0&controls=0&disablekb=1&fs=0&iv_load_policy=3&cc_load_policy=0&enablejsapi=1&origin=${encodeURIComponent(window.location.origin)}`;
     
     return (
       <div className={className} style={containerStyle} data-testid="media-container-16-9">
@@ -624,7 +625,7 @@ const MediaDisplay = ({ url, className }) => {
           ref={iframeRef}
           src={youtubeUrl}
           frameBorder="0" 
-          allow="autoplay; encrypted-media" 
+          allow="autoplay; encrypted-media; accelerometer; gyroscope" 
           style={{ ...contentStyle, pointerEvents: 'none' }}
           title="YouTube video"
           onError={() => setHasError(true)}
