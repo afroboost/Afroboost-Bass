@@ -575,26 +575,29 @@ const MediaDisplay = ({ url, className }) => {
     height: '100%'
   };
 
-  // Petite icône discrète en bas à droite
+  // Petite icône discrète en bas à droite - VISIBLE quand muted
   const smallMuteStyle = {
     position: 'absolute',
     bottom: '12px',
     right: '12px',
     zIndex: 100,
-    width: '32px',
+    padding: isMuted ? '8px 16px' : '8px',
+    minWidth: isMuted ? 'auto' : '32px',
     height: '32px',
-    borderRadius: '50%',
-    background: 'rgba(0, 0, 0, 0.7)',
+    borderRadius: isMuted ? '16px' : '50%',
+    background: isMuted ? 'linear-gradient(135deg, #d91cd2 0%, #8b5cf6 100%)' : 'rgba(0, 0, 0, 0.7)',
     border: '1px solid rgba(255, 255, 255, 0.3)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    gap: '6px',
     cursor: 'pointer',
     color: '#fff',
     fontSize: '14px',
-    opacity: 0.8,
+    opacity: 1,
     transition: 'all 0.2s ease',
-    boxShadow: '0 2px 8px rgba(0,0,0,0.3)'
+    boxShadow: isMuted ? '0 0 15px rgba(217, 28, 210, 0.5)' : '0 2px 8px rgba(0,0,0,0.3)',
+    animation: isMuted ? 'pulse 2s infinite' : 'none'
   };
 
   // Couche transparente COMPLÈTE pour bloquer TOUS les clics vers YouTube
