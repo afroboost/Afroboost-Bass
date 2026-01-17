@@ -525,7 +525,7 @@ const LanguageSelector = ({ lang, setLang }) => {
 // Media Display Component with Discreet Sound Control
 const MediaDisplay = ({ url, className }) => {
   const [hasError, setHasError] = useState(false);
-  const [isMuted, setIsMuted] = useState(false); // Son activé par défaut
+  const [isMuted, setIsMuted] = useState(true); // Muted par défaut pour garantir l'autoplay et la boucle
   const videoRef = useRef(null);
   const iframeRef = useRef(null);
   const media = parseMediaUrl(url);
