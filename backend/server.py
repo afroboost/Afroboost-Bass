@@ -279,6 +279,9 @@ class ConceptUpdate(BaseModel):
     paymentTwint: Optional[bool] = None
     paymentPaypal: Optional[bool] = None
     paymentCreditCard: Optional[bool] = None
+    # Affiche Événement (popup)
+    eventPosterEnabled: Optional[bool] = None
+    eventPosterMediaUrl: Optional[str] = None
 
 class AppConfig(BaseModel):
     model_config = ConfigDict(extra="ignore")
