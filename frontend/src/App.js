@@ -5204,29 +5204,19 @@ function App() {
 
         {selectedCourse && selectedDate && (
           <div id="offers-section" className="mb-8">
-            <h2 className="font-semibold mb-4 text-white" style={{ fontSize: '18px' }}>{t('chooseOffer')}</h2>
+            <h2 className="font-semibold mb-2 text-white" style={{ fontSize: '18px' }}>{t('chooseOffer')}</h2>
             
-            {/* Horizontal Slider for Offers with LED effect - SWIPE FLUIDE */}
-            <div 
-              className="offers-slider"
-              data-testid="offers-slider"
-            >
-              {visibleOffers.map(offer => (
-                <OfferCardSlider 
-                  key={offer.id} 
-                  offer={offer} 
-                  selected={selectedOffer?.id === offer.id} 
-                  onClick={() => handleSelectOffer(offer)} 
-                />
-              ))}
-            </div>
+            {/* Instruction visuelle pour guider l'utilisateur */}
+            <p className="text-sm mb-4" style={{ color: '#d91cd2' }}>
+              👉 Sélectionnez une offre pour continuer
+            </p>
             
-            {/* Slider navigation hint */}
-            {visibleOffers.length > 1 && (
-              <p className="text-xs text-center mt-2" style={{ color: 'rgba(255,255,255,0.4)' }}>
-                ← Faites défiler pour voir plus d'offres →
-              </p>
-            )}
+            {/* Horizontal Slider for Offers with LED effect - SWIPE FLUIDE + AUTO-PLAY */}
+            <OffersSliderAutoPlay 
+              offers={visibleOffers}
+              selectedOffer={selectedOffer}
+              onSelectOffer={handleSelectOffer}
+            />
           </div>
         )}
 
