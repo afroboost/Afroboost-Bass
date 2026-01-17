@@ -366,6 +366,8 @@ Application de réservation de casques audio pour des cours de fitness Afroboost
   - **Composant OffersSliderAutoPlay** : Nouveau composant dans App.js (lignes 946-1081)
 
 ### P1 - À faire
+- [ ] **CRITICAL: Refactoring de App.js** - Le fichier monolithique dépasse 5500 lignes. Extraire la logique restante dans des hooks et composants dédiés.
+- [ ] **Optimisation Backend MongoDB** - Appliquer pagination et projection sur les requêtes pour améliorer les performances en production.
 - [ ] Continuer refactoring: Extraire CoachDashboard, CoachLoginModal dans composants séparés
 - [ ] Tests automatisés pour les composants extraits
 
