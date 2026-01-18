@@ -181,14 +181,43 @@ const CoachDashboard = ({ t, lang, onBack, onLogout }) => {
         ]);
         setReservations(res.data); setCourses(crs.data); setOffers(off.data); setUsers(usr.data);
         setPaymentLinks(lnk.data); setConcept(cpt.data); setDiscountCodes(cds.data);
+        
+        // === SANITIZE DATA: Nettoyer automatiquement les données fantômes ===
+        try {
+          const sanitizeResult = await axios.post(`${API}/sanitize-data`);
+          if (sanitizeResult.data.stats?.codes_cleaned > 0) {
+            console.log(`🧹 Nettoyage: ${sanitizeResult.data.stats.codes_cleaned} codes promo nettoyés`);
+            // Recharger les codes promo après nettoyage
+            const updatedCodes = await axios.get(`${API}/discount-codes`);
+            setDiscountCodes(updatedCodes.data);
+          }
+        } catch (sanitizeErr) {
+          console.warn("Sanitize warning:", sanitizeErr);
+        }
       } catch (err) { console.error("Error:", err); }
     };
     loadData();
   }, []);
 
-  // Get unique customers for beneficiary dropdown
+  // Fonction de nettoyage manuel (peut être appelée depuis l'interface)
+  const manualSanitize = async () => {
+    try {
+      const result = await axios.post(`${API}/sanitize-data`);
+      const stats = result.data.stats;
+      alert(`🧹 Nettoyage terminé!\n\n• ${stats.codes_cleaned} codes promo nettoyés\n• ${stats.valid_offers} offres valides\n• ${stats.valid_courses} cours valides\n• ${stats.valid_users} contacts valides`);
+      // Recharger les codes promo
+      const updatedCodes = await axios.get(`${API}/discount-codes`);
+      setDiscountCodes(updatedCodes.data);
+    } catch (err) {
+      console.error("Erreur nettoyage:", err);
+      alert("Erreur lors du nettoyage");
+    }
+  };
+
+  // Get unique customers for beneficiary dropdown (filtrage local supplémentaire)
   const uniqueCustomers = Array.from(new Map(
     [...reservations.map(r => ({ name: r.userName, email: r.userEmail })), ...users.map(u => ({ name: u.name, email: u.email }))]
+    .filter(c => c.email && c.name) // Exclure les entrées sans email ou nom
     .map(c => [c.email, c])
   ).values());
 
