@@ -484,6 +484,8 @@ const CoachDashboard = ({ t, lang, onBack, onLogout }) => {
       try {
         await axios.delete(`${API}/reservations/${reservationId}`);
         setReservations(prev => prev.filter(r => r.id !== reservationId));
+        // Mettre à jour le compteur de pagination
+        setReservationPagination(prev => ({ ...prev, total: prev.total - 1 }));
         console.log(`✅ Réservation ${reservationId} supprimée définitivement`);
       } catch (err) {
         console.error("Erreur suppression réservation:", err);
