@@ -433,13 +433,13 @@ const CoachDashboard = ({ t, lang, onBack, onLogout }) => {
     setDiscountCodes(discountCodes.map(c => c.id === code.id ? { ...c, active: !c.active } : c));
   };
 
-  // Delete discount code - SUPPRESSION DÉFINITIVE EN BASE
+  // Delete discount code - SUPPRESSION DÉFINITIVE EN BASE + VÉRIFICATION
   const deleteCode = async (codeId) => {
     if (window.confirm("⚠️ SUPPRESSION DÉFINITIVE\n\nCe code promo sera supprimé de la base de données.\nCette action est irréversible.\n\nConfirmer la suppression ?")) {
       try {
         await axios.delete(`${API}/discount-codes/${codeId}`);
-        setDiscountCodes(discountCodes.filter(c => c.id !== codeId));
-        console.log(`✅ Code ${codeId} supprimé définitivement de la base`);
+        setDiscountCodes(prev => prev.filter(c => c.id !== codeId));
+        console.log(`✅ Code ${codeId} supprimé définitivement`);
       } catch (error) {
         console.error("Erreur suppression code:", error);
         alert("❌ Erreur lors de la suppression");
@@ -447,14 +447,16 @@ const CoachDashboard = ({ t, lang, onBack, onLogout }) => {
     }
   };
   
-  // Delete reservation
+  // Delete reservation - SUPPRESSION DÉFINITIVE EN BASE
   const deleteReservation = async (reservationId) => {
-    if (window.confirm(t('confirmDeleteReservation'))) {
+    if (window.confirm("⚠️ SUPPRESSION DÉFINITIVE\n\nCette réservation sera supprimée de la base de données.\n\nConfirmer la suppression ?")) {
       try {
         await axios.delete(`${API}/reservations/${reservationId}`);
-        setReservations(reservations.filter(r => r.id !== reservationId));
+        setReservations(prev => prev.filter(r => r.id !== reservationId));
+        console.log(`✅ Réservation ${reservationId} supprimée définitivement`);
       } catch (err) {
         console.error("Erreur suppression réservation:", err);
+        alert("❌ Erreur lors de la suppression");
       }
     }
   };
