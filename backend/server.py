@@ -1066,7 +1066,7 @@ async def update_config(config_update: dict):
 # Seul l'email autorisé peut accéder au dashboard
 
 # Email autorisé pour l'accès Coach/Super Admin
-AUTHORIZED_COACH_EMAIL = os.environ.get("AUTHORIZED_COACH_EMAIL", "coach@afroboost.com")
+AUTHORIZED_COACH_EMAIL = os.environ.get("AUTHORIZED_COACH_EMAIL", "contact.artboost@gmail.com")
 
 class GoogleAuthSession(BaseModel):
     """Session d'authentification Google"""
