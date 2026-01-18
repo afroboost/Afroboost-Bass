@@ -2219,8 +2219,18 @@ const CoachDashboard = ({ t, lang, onBack, onLogout, coachUser }) => {
             <div style={{ maxHeight: '400px', overflowY: 'auto', paddingRight: '8px' }} className="custom-scrollbar">
               {courses.filter(c => !c.archived).map((course, idx) => (
                 <div key={course.id} className="glass rounded-lg p-4 mb-4 relative">
-                  {/* Actions: Dupliquer + Archiver */}
+                  {/* Actions: Audio + Dupliquer + Archiver */}
                   <div className="absolute top-2 right-2 flex gap-1">
+                    {/* Bouton Gérer l'Audio */}
+                    <button 
+                      onClick={() => openAudioModal(course)}
+                      className="p-2 rounded-lg hover:bg-pink-500/30 transition-colors"
+                      style={{ color: '#d91cd2' }}
+                      title="Gérer l'Audio / Playlist"
+                      data-testid={`audio-course-${course.id}`}
+                    >
+                      <span className="text-sm">🎵</span>
+                    </button>
                     {/* Bouton dupliquer */}
                     <button 
                       onClick={async () => {
