@@ -1988,6 +1988,7 @@ function App() {
   const [lastReservation, setLastReservation] = useState(null);
   const [loading, setLoading] = useState(false);
   const [appliedDiscount, setAppliedDiscount] = useState(null);
+  const [hasSavedTicket, setHasSavedTicket] = useState(false); // Bouton flottant "Voir mon ticket"
 
   // Navigation et filtrage
   const [activeFilter, setActiveFilter] = useState('all');
@@ -1995,6 +1996,56 @@ function App() {
   
   // Indicateur de scroll pour les nouveaux utilisateurs
   const showScrollIndicator = useScrollIndicator();
+
+  // PERSISTANCE TICKET: Vérifier s'il existe un ticket sauvegardé au chargement
+  useEffect(() => {
+    const savedTicket = localStorage.getItem('af_last_ticket');
+    if (savedTicket) {
+      try {
+        const ticketData = JSON.parse(savedTicket);
+        // Vérifier que le ticket n'est pas trop vieux (7 jours max)
+        const ticketDate = new Date(ticketData.savedAt);
+        const now = new Date();
+        const daysDiff = (now - ticketDate) / (1000 * 60 * 60 * 24);
+        
+        if (daysDiff <= 7) {
+          setHasSavedTicket(true);
+        } else {
+          // Ticket expiré, le supprimer
+          localStorage.removeItem('af_last_ticket');
+        }
+      } catch (e) {
+        console.error("Error parsing saved ticket:", e);
+        localStorage.removeItem('af_last_ticket');
+      }
+    }
+  }, []);
+
+  // Fonction pour afficher le ticket sauvegardé
+  const showSavedTicket = () => {
+    const savedTicket = localStorage.getItem('af_last_ticket');
+    if (savedTicket) {
+      try {
+        const ticketData = JSON.parse(savedTicket);
+        setLastReservation(ticketData);
+        setShowSuccess(true);
+      } catch (e) {
+        console.error("Error showing saved ticket:", e);
+        setValidationMessage("Erreur lors de la récupération du ticket.");
+        setTimeout(() => setValidationMessage(""), 3000);
+      }
+    }
+  };
+
+  // Fonction pour sauvegarder le ticket dans localStorage
+  const saveTicketToStorage = (ticketData) => {
+    const dataToSave = {
+      ...ticketData,
+      savedAt: new Date().toISOString()
+    };
+    localStorage.setItem('af_last_ticket', JSON.stringify(dataToSave));
+    setHasSavedTicket(true);
+  };
 
   // Check for /validate/:code URL on mount
   useEffect(() => {
