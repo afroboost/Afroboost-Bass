@@ -2674,17 +2674,55 @@ function App() {
     }
 
     // PAID RESERVATION: Check if payment is configured
-    if (!paymentLinks.stripe?.trim() && !paymentLinks.paypal?.trim() && !paymentLinks.twint?.trim()) {
+    const hasStripeCheckout = concept.paymentCreditCard || concept.paymentTwint;
+    const hasExternalLinks = paymentLinks.stripe?.trim() || paymentLinks.paypal?.trim() || paymentLinks.twint?.trim();
+    
+    if (!hasStripeCheckout && !hasExternalLinks) {
       setValidationMessage(t('noPaymentConfigured'));
       setTimeout(() => setValidationMessage(""), 4000);
       return;
     }
 
-    setPendingReservation(reservation);
-    
-    // Create user
+    // Create user first
     try { await axios.post(`${API}/users`, { name: userName, email: userEmail, whatsapp: userWhatsapp }); }
     catch (err) { console.error("User creation error:", err); }
+
+    // STRIPE CHECKOUT (card + twint) si activé dans le concept
+    if (hasStripeCheckout) {
+      setLoading(true);
+      try {
+        const checkoutResponse = await axios.post(`${API}/create-checkout-session`, {
+          productName: `${reservation.offerName} - ${reservation.courseName}`,
+          amount: totalPrice,
+          customerEmail: userEmail,
+          originUrl: window.location.origin,
+          reservationData: {
+            id: reservation.userId,
+            courseName: reservation.courseName,
+            offerName: reservation.offerName
+          }
+        });
+        
+        // Sauvegarder la réservation en attente pour la finaliser après paiement
+        localStorage.setItem('pendingReservation', JSON.stringify(reservation));
+        
+        // Rediriger vers Stripe Checkout
+        if (checkoutResponse.data.url) {
+          window.location.href = checkoutResponse.data.url;
+        } else {
+          throw new Error('No checkout URL received');
+        }
+      } catch (err) {
+        console.error("Stripe checkout error:", err);
+        setValidationMessage(err.response?.data?.detail || 'Erreur lors de la création du paiement');
+        setTimeout(() => setValidationMessage(""), 4000);
+        setLoading(false);
+      }
+      return;
+    }
+
+    // FALLBACK: Liens de paiement externes (ancienne méthode)
+    setPendingReservation(reservation);
 
     // Open payment link
     if (paymentLinks.twint?.trim()) window.open(paymentLinks.twint, '_blank');
