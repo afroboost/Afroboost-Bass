@@ -1058,8 +1058,9 @@ async def create_checkout_session(request: CreateCheckoutRequest):
         raise HTTPException(status_code=500, detail="Stripe API key not configured")
     
     # Construire les URLs dynamiquement basées sur l'origine frontend
-    success_url = f"{request.originUrl}?payment_success=true&session_id={{CHECKOUT_SESSION_ID}}"
-    cancel_url = f"{request.originUrl}?payment_canceled=true"
+    # /success pour la page de succès, / pour l'annulation (retour accueil)
+    success_url = f"{request.originUrl}/success?payment_success=true&session_id={{CHECKOUT_SESSION_ID}}"
+    cancel_url = f"{request.originUrl}/?payment_canceled=true"
     
     # Montant en centimes (Stripe utilise les plus petites unités)
     amount_cents = int(request.amount * 100)
